@@ -16,5 +16,7 @@ type MusicState = {
     n: number;
     state: "play" | "pause";
     position: number;
+    shuffle: number;
+    repeat: number;
     timeOfMsg: number;
 }

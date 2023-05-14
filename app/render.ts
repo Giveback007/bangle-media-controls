@@ -1,7 +1,9 @@
 import { theme } from "./data";
-import { getMediaBtns, setColor } from "./utils";
+import { getState } from "./state";
+import { getAudioTime, getMediaBtns, setColor } from "./utils";
 
 export function render() {
+    const s = getState();
     const { fg } = theme;
     g.clear();
     setColor(fg);
@@ -9,18 +11,42 @@ export function render() {
     const btns = getMediaBtns();
     for (let key in btns) (btns as any)[key]();
 
-    // if (state.musicState) {
-    //     // Display the current time
-    //     g.drawString(formatTime(state.now), 20, 20);
+    if (s.musicState?.timeOfMsg) {
+        const { pos, dur } = getAudioTime(s.musicState, s.musicState?.state === 'play');
+        
+        g.setFont("6x8", 2);
+        const startPosDur = (120 - g.stringWidth(dur)) / 2;
+        g.drawString(dur, startPosDur, 98);
 
-    //     // Display the artist
-    //     g.drawString(state.musicState.artist, 20, 40);
+        const startPosPos = (120 - g.stringWidth(pos)) / 2;
+        g.drawString(pos, startPosPos, 78);
 
-    //     // Calculate the current position in the track
-    //     const timeSinceMsg = state.now - state.musicState.dateOfMsg;
-    //     const currentPosition = state.musicState.position + timeSinceMsg / 1000;
+        // g.setFont("6x8", 1.5);
+        g.setFont("Vector", 15);
+        const { artist, track } = s.musicState;
 
-    //     // Display track duration vs current time, example output: "09:10 / -01:38:58"
-    //     g.drawString(`${formatAudioTime(currentPosition)} / -${formatAudioTime(state.musicState.dur - currentPosition)}`, 20, 80);
-    // }
+        const maxWidth = g.getWidth() * 2 / 3; // Two thirds of the screen width
+    
+        let trackLines = g.wrapString(track, maxWidth);
+        let artistLines = g.wrapString(artist, maxWidth);
+    
+        // If the track name is too long, cut it off and add an ellipsis
+        if (trackLines.length > 2) {
+          trackLines = [trackLines[0], trackLines[1] + '...'];
+        }
+    
+        // If the artist name is too long, cut it off and add an ellipsis
+        if (artistLines.length > 2) {
+          artistLines = [artistLines[0] + '...'];
+        }
+    
+        const lines = trackLines.concat([''], artistLines);
+    
+        let y = 0;
+        for (let line of lines) {
+            g.drawString(line, 0, y);
+            y += g.getFontHeight();
+        }
+    }
+    g.flip();
 }

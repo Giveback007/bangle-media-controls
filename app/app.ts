@@ -18,7 +18,6 @@ setTimeout(() => {
     // -- Event Handlers -- //
     const debouncedRenderOnTouch = debounce(render, 230);
     Bangle.on('touch', (_btn: 1 | 2, cor: { x: n, y: n }) => {
-        console.log(cor)
         render();
         const x = cor.x;
         const y = cor.y;
@@ -37,43 +36,74 @@ setTimeout(() => {
             }
         }
     });
+
+    setInterval(() => { setState({ now: Date.now() }) }, 1000);
 }, 0);
 
 
-
+/**
+ * I don't understand why but the console.log's have to
+ * be in this order for the app to send the message consistently.
+ */
 const tapEvHandlers = {
     1: function() {},
     2: function() {},
     4: function() {},
     5: function() {},
 
-   // volume up
-   3: () => sendBT({t:"music", n:"volumeup"}),
-        
-   // volume down
-   6: () => sendBT({t:"music", n:"volumedown"}),
-   
-   // backward
-   7: () => sendBT({t:"music", n:"previous"}),
+    // volume up
+    3: () => {
+        console.log('volume up');
+        sendBT({t:"music", n:"volumeup"})
+    },
+            
+    // volume down
+    6: () => {
+        console.log('volume down');
+        sendBT({t:"music", n:"volumedown"})
+    },
+    
+    // backward
+    7: () => {
+        console.log('previous');
+        sendBT({t:"music", n:"previous"})
+        tigerMusicStateMsg();
+    },
 
-   // play/pause
-   8: () => sendBT({t:"music", n: getState().playPause}),
+    // play/pause
+    8: (playPause = getState().playPause) => {
+        console.log('play/pause');
+        sendBT({t:"music", n: playPause});
+    },
 
-   // forward
-   9: () => sendBT({t:"music", n:"next"})
+    // forward
+    9: () => {
+        console.log('next');
+        sendBT({t:"music", n:"next"});
+        tigerMusicStateMsg();
+    },
 };
+
+// GadgetBride does not always send the musicstate message
+// to the app. This function toggle play/pause twice to
+// trigger the musicstate message.
+function tigerMusicStateMsg() {
+    const try1 = getState().playPause;
+    const try2 = try1 === "play" ? "pause" : "play";
+
+    setTimeout(() => tapEvHandlers[8](try1), 0);
+    setTimeout(() => tapEvHandlers[8](try2), 100);
+}
 
 // -- GadgetBridge -- //
 (global as any).GB = (obj: { t: string, [key: string]: any}) => {
-    console.log(obj);
+    // if (obj.t === "musicinfo" || obj.t === 'musicstate') console.log(obj);
     switch (obj.t) {
         case "musicinfo":
         case "musicstate": {
             if (obj.t === "musicstate") obj.timeOfMsg = Date.now();
             
             const musicState = {...getState().musicState || {}, ...obj as MusicState};
-            console.log(musicState);
-            // Object.assign(musicState, obj);
             setState({ musicState });
         }
         // case 'weather':

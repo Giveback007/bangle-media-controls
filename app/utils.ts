@@ -53,8 +53,9 @@ export function menu() {
   });
 }
 
-export const sendBT = (obj: any) =>
+export function sendBT(obj: any) {
   Bluetooth.println(JSON.stringify(obj));
+}
 
 export const formatAudioTime = (timeInSeconds: n) => {
   const h = Math.floor(timeInSeconds / 3600);
@@ -71,3 +72,17 @@ export function formatTime(msTime: n) {
 
   return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}`;
 }
+
+export function getAudioTime(data: MusicState, isPlay: boolean) {
+  const timeSinceMsg = getState().now - data.timeOfMsg;
+  let currentPosition = Math.floor(data.position + (isPlay ? (timeSinceMsg / 1000) + 1 : 0));
+  currentPosition = Math.floor(data.dur <= currentPosition ? data.dur : currentPosition);
+
+  // example output: "09:10 | -01:38:58"
+  return {
+    pos: formatAudioTime(currentPosition),
+    dur: '-' + formatAudioTime(data.dur - currentPosition)
+  }
+}
+
+// export const wait = (ms: n) => new Promise(resolve => setTimeout(resolve, ms));

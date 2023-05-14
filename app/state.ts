@@ -3,7 +3,7 @@ import { render } from "./render";
 let state: State = {
     now: Date.now(),
     musicState: null,
-    playPause: "play",
+    playPause: "pause",
 };
 
 export let setState: (stateUpdate: Partial<State>) => void;
@@ -25,8 +25,9 @@ const debouncedRenderOnState = debounce(render, 200);
 // const debLogState = debounce(() => console.log({state}), 200);
 setState = (stateUpdate: Partial<State>) => {
     const s = {...state, ...stateUpdate};
-    s.playPause =
-        s.musicState && s.musicState.state === 'play' ? 'pause' : 'play';
+
+    const mS = stateUpdate.musicState;
+    if (mS) s.playPause = mS.state === 'play' ? 'pause' : 'play';
     
     state = s;
     debouncedRenderOnState();

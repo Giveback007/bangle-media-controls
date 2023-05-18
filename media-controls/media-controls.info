@@ -1,0 +1,6 @@
+require("Storage").write("timer.info",{
+    "id":"media-controls",
+    "name":"Media Controls",
+    "src":"media-controls.app.js",
+    "icon":"media-controls.img"
+});

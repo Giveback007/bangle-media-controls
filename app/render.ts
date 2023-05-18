@@ -1,8 +1,4 @@
-import { theme } from "./data";
-import { getState } from "./state";
-import { getAudioTime, getMediaBtns, setColor } from "./utils";
-
-export function render() {
+function render() {
     const s = getState();
     const { fg } = theme;
     g.clear();

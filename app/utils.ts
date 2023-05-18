@@ -1,9 +1,6 @@
-import { box, mediaBtns } from "./data"
-import { getState } from "./state"
+const setColor = (clr: rgb) => g.setColor(clr[0], clr[1], clr[2]);
 
-export const setColor = (clr: rgb) => g.setColor(clr[0], clr[1], clr[2]);
-
-export const getMediaBtns = () => ({
+const getMediaBtns = () => ({
         // Top Left 4 squares
         // g.drawImage(mediaBtns.power, 0, 0);
         // g.drawImage(mediaBtns.power, 59, 0);
@@ -21,7 +18,7 @@ export const getMediaBtns = () => ({
 } as { [key in BoxNum]: () => void});
 
 
-export function debounce(func: Function, wait: number) {
+function debounce(func: Function, wait: number) {
     let timeoutId: number;
     return function() {
       const args = arguments;
@@ -33,7 +30,7 @@ export function debounce(func: Function, wait: number) {
     };
 }
 
-export function highlightBox(n: BoxNum, w = 59) {
+function highlightBox(n: BoxNum, w = 59) {
   const bX = box[n][0];
   const bY = box[n][1];
 
@@ -41,7 +38,7 @@ export function highlightBox(n: BoxNum, w = 59) {
   g.drawRect(bX, bY, bX + w, bY + w);
 }
 
-export function menu() {
+function menu() {
   E.showScroller({
       h : 40,
       c : 8,
@@ -53,11 +50,11 @@ export function menu() {
   });
 }
 
-export function sendBT(obj: any) {
+function sendBT(obj: any) {
   Bluetooth.println(JSON.stringify(obj));
 }
 
-export const formatAudioTime = (timeInSeconds: n) => {
+const formatAudioTime = (timeInSeconds: n) => {
   const h = Math.floor(timeInSeconds / 3600);
   const m = Math.floor((timeInSeconds % 3600) / 60);
   const s = Math.floor(timeInSeconds % 60);
@@ -65,7 +62,7 @@ export const formatAudioTime = (timeInSeconds: n) => {
   return `${h ? `${h}:` : ''}${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
 }
 
-export function formatTime(msTime: n) {
+function formatTime(msTime: n) {
   const date = new Date(msTime);
   const h = date.getHours();
   const m = date.getMinutes();
@@ -73,7 +70,7 @@ export function formatTime(msTime: n) {
   return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}`;
 }
 
-export function getAudioTime(data: MusicState, isPlay: boolean) {
+function getAudioTime(data: MusicState, isPlay: boolean) {
   const timeSinceMsg = getState().now - data.timeOfMsg;
   let currentPosition = Math.floor(data.position + (isPlay ? (timeSinceMsg / 1000) + 1 : 0));
   currentPosition = Math.floor(data.dur <= currentPosition ? data.dur : currentPosition);
@@ -85,4 +82,4 @@ export function getAudioTime(data: MusicState, isPlay: boolean) {
   }
 }
 
-// export const wait = (ms: n) => new Promise(resolve => setTimeout(resolve, ms));
+// const wait = (ms: n) => new Promise(resolve => setTimeout(resolve, ms));

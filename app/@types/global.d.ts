@@ -1,4 +1,6 @@
-// declare var log: typeof console.log;
+/// <reference types="espruino" />
+
+declare module 'heatshrink';
 
 declare var g: Graphics & {
     setFontAlign(alignX: number, alignY: number): void;
@@ -37,4 +39,4 @@ namespace E {
 }
 
 /** https://www.espruino.com/ReferenceBANGLEJS2#Bangle */
-declare var Bangle: Bangle;
+declare var Bangle: any;

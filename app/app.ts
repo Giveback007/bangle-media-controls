@@ -1,13 +1,15 @@
-import { getMediaBtns, sendBT, debounce } from "./utils";
-import { setState, getState } from "./state";
-import { box } from "./data";
-import { render } from "./render";
+import "./data.ts";
+import "./utils.ts";
+import "./render.ts";
+import "./state.ts";
 
 /* NOTES:
     Screen Size: 176x176
     Box Size: 59x59
     Box Numbers: 1-9
 */
+
+// console.log('stuff')
 
 // -- APP START -- //
 setTimeout(() => {
@@ -37,7 +39,12 @@ setTimeout(() => {
         }
     });
 
-    setInterval(() => { setState({ now: Date.now() }) }, 1000);
+    function timer() {
+        setState({ now: Date.now() })
+        setTimeout(timer, 1000);
+    };
+
+    timer();
 }, 0);
 
 
@@ -102,6 +109,7 @@ function tigerMusicStateMsg() {
         case "musicinfo":
         case "musicstate": {
             if (obj.t === "musicstate") obj.timeOfMsg = Date.now();
+            console.log(obj);
             
             const musicState = {...getState().musicState || {}, ...obj as MusicState};
             setState({ musicState });
@@ -112,3 +120,4 @@ function tigerMusicStateMsg() {
             
     }
 }
+

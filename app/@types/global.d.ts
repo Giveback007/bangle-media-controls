@@ -9,6 +9,7 @@ declare var g: Graphics & {
     setBgColor(color: string): typeof g;
     clearRect(x1: number, y1: number, x2: number, y2: number): typeof g;
     drawString(str: string, x: number, y: number): typeof g;
+    wrapString(str: string, width: number): string[];
     theme: {
         /** foreground colour */
         fg: number,

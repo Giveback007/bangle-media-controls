@@ -17,11 +17,10 @@ function render() {
         const startPosPos = (120 - g.stringWidth(pos)) / 2;
         g.drawString(pos, startPosPos, 78);
 
-        // g.setFont("6x8", 1.5);
         g.setFont("Vector", 15);
         const { artist, track } = s.musicState;
 
-        const maxWidth = g.getWidth() * 2 / 3; // Two thirds of the screen width
+        const maxWidth = Math.floor(g.getWidth() * 2 / 3) - 1; // Two thirds of the screen width
     
         let trackLines = g.wrapString(track, maxWidth);
         let artistLines = g.wrapString(artist, maxWidth);

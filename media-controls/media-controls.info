@@ -1,4 +1,4 @@
-require("Storage").write("timer.info",{
+require("Storage").write("media-controls.info",{
     "id":"media-controls",
     "name":"Media Controls",
     "src":"media-controls.app.js",
